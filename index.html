@@ -6,104 +6,179 @@
     <title>UCHIHA EZRA /// SYSTEM V7</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- GAYA NINJA UCHIHA V.7 --- */
+        /* --- CORE VARIABLES --- */
         :root {
-            --chakra-color: #ff0000;
+            --chakra-color: #ff0000; /* Merah Uchiha */
             --dark-bg: #050505;
             --glass: rgba(0, 0, 0, 0.85);
             --border-glow: 0 0 10px rgba(255, 0, 0, 0.5);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--dark-bg); margin: 0; height: 100vh; overflow: hidden; font-family: 'Courier New', monospace; color: var(--chakra-color); display: flex; justify-content: center; align-items: center; }
+        
+        body { 
+            background: var(--dark-bg); 
+            margin: 0; 
+            height: 100vh; height: 100dvh; 
+            width: 100vw; overflow: hidden; 
+            font-family: 'Courier New', monospace; 
+            color: var(--chakra-color); 
+            display: flex; justify-content: center; align-items: center; 
+            transition: all 1s ease;
+        }
+        
+        /* CRT SCANLINE EFFECT */
         body::after {
-            content: " ";
-            display: block;
-            position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
             z-index: 999; background-size: 100% 2px, 3px 100%; pointer-events: none;
         }
         
-        #bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.3; filter: grayscale(100%) contrast(1.2); }
+        #bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.3; filter: grayscale(100%) contrast(1.2); transition: 1s; }
 
-        /* GRID */
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; width: 100vw; height: 100vh; }
-        .grid-item { border: 1px solid rgba(255,0,0,0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--glass); backdrop-filter: blur(5px); text-align: center; position: relative; }
+        /* --- GRID SYSTEM --- */
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            grid-template-rows: 1fr 1fr 1fr; 
+            width: 100%; height: 100%; 
+            padding: 5px; gap: 5px;
+            transition: all 1s ease-in-out;
+        }
+        
+        .grid-item { 
+            border: 1px solid rgba(255,0,0,0.3); 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            background: var(--glass); backdrop-filter: blur(5px); 
+            text-align: center; position: relative; overflow: hidden; 
+            transition: all 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
         .sys-label { position: absolute; top: 5px; left: 5px; font-size: 0.6rem; opacity: 0.6; pointer-events: none; }
 
-        /* CENTER PANEL (EXPANDABLE) */
-        .center-panel { border: 2px solid var(--chakra-color); box-shadow: var(--border-glow); z-index: 50; cursor: pointer; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        /* --- CENTER PANEL --- */
+        .center-panel { border: 2px solid var(--chakra-color); box-shadow: var(--border-glow); z-index: 50; cursor: pointer; }
         .center-panel.expanded { 
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 95vmin; height: 95vmin; border-radius: 50%; 
+            width: 90vw; height: 90dvh; max-width: 600px; border-radius: 20px; 
             background: black; border: 3px solid var(--chakra-color);
             box-shadow: 0 0 60px var(--chakra-color); z-index: 1000;
             display: flex; flex-direction: column; align-items: center; padding: 20px; overflow: hidden;
         }
 
-        /* ISI LINGKARAN */
-        #circle-content { display: none; width: 85%; height: 85%; margin-top: 8%; overflow-y: auto; scrollbar-width: none; }
-        .section-title { border-bottom: 1px dashed red; padding-bottom: 5px; margin: 15px 0 10px 0; font-size: 1rem; color: gold; }
-        
-        /* CHAT UI */
-        .chat-box { height: 120px; overflow-y: auto; border: 1px solid #333; padding: 5px; margin-bottom: 5px; font-size: 0.7rem; text-align: left; background: #0a0a0a; }
-        .chat-msg { border-bottom: 1px solid #222; padding: 3px 0; display: flex; justify-content: space-between; }
-        .chat-meta { color: #555; font-size: 0.6rem; }
-        .del-btn { color: red; cursor: pointer; margin-left: 5px; font-weight: bold; }
-        .input-group { display: flex; gap: 5px; }
-        .input-group input { background: #111; border: 1px solid #333; color: white; flex: 1; padding: 5px; }
-        .input-group button { background: red; color: black; border: none; font-weight: bold; cursor: pointer; }
+        /* --- WEBSITE AGE DISPLAY --- */
+        #website-age {
+            font-size: 0.7rem; color: #fff; margin-top: 5px; padding: 5px;
+            border: 1px dashed #333; border-radius: 5px; display: none;
+        }
 
-        /* GALLERY UI */
+        /* --- CONTENT STYLES --- */
+        #circle-content { display: none; width: 90%; height: 90%; margin-top: 20px; overflow-y: auto; scrollbar-width: none; }
+        .section-title { border-bottom: 1px dashed red; padding-bottom: 5px; margin: 15px 0 10px 0; font-size: 1rem; color: gold; text-transform: uppercase; }
+        
+        .ninja-btn { background: transparent; border: none; color: var(--chakra-color); font-size: 2rem; cursor: pointer; padding: 20px; transition: 0.3s; }
+        .ninja-btn:hover { text-shadow: 0 0 15px var(--chakra-color); transform: scale(1.1); }
+
+        /* --- SOSMED BUTTONS (NEW STYLE) --- */
+        .social-vertical { display: flex; flex-direction: column; gap: 10px; width: 100%; padding: 0 10px; }
+        .social-btn {
+            display: flex; align-items: center; justify-content: space-between;
+            background: linear-gradient(90deg, rgba(255,0,0,0.1), rgba(0,0,0,0.8));
+            border: 1px solid var(--chakra-color);
+            padding: 15px; color: white; text-decoration: none;
+            font-size: 1.2rem; transition: 0.3s; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .social-btn:hover { background: var(--chakra-color); color: black; transform: translateX(5px); box-shadow: 0 0 20px var(--chakra-color); }
+        .social-btn i { font-size: 1.5rem; }
+
+        /* --- MEDIA & CHAT --- */
+        .chat-box { height: 150px; overflow-y: auto; border: 1px solid #333; padding: 5px; margin-bottom: 5px; font-size: 0.7rem; text-align: left; background: #0a0a0a; }
+        .chat-msg { border-bottom: 1px solid #222; padding: 5px; display: flex; justify-content: space-between; }
         .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .gallery-item { position: relative; border: 1px solid #333; height: 100px; overflow: hidden; }
         .gallery-item img, .gallery-item video { width: 100%; height: 100%; object-fit: cover; }
-        .gallery-del { position: absolute; top: 0; right: 0; background: red; color: white; padding: 2px 5px; font-size: 0.7rem; cursor: pointer; }
+        .gallery-del { display: none; position: absolute; top: 0; right: 0; background: red; color: white; padding: 2px 5px; font-size: 0.7rem; cursor: pointer; }
+        .admin-controls { display: none; }
 
-        .close-circle { 
-    position: absolute; bottom: 15px;
-    background: var(--chakra-color); /* JADI MERAH FULL */
-    color: black; /* Teks jadi hitam biar terbaca */
-    border: none;
-    padding: 8px 30px; 
-    border-radius: 20px; 
-    font-weight: bold;
-    cursor: pointer; 
-    display: none;
-    box-shadow: 0 0 15px var(--chakra-color); /* Efek cahaya merah */
-    transition: transform 0.2s;
-}
-
-.close-circle:hover {
-    transform: scale(1.1); /* Membesar dikit pas disentuh */
-    box-shadow: 0 0 25px red;
-}
+        .close-circle { position: absolute; bottom: 15px; background: var(--chakra-color); color: black; border: none; padding: 8px 30px; border-radius: 20px; font-weight: bold; cursor: pointer; display: none; }
         .center-panel.expanded .close-circle { display: block; }
 
-        /* TOMBOL & ANIMASI */
-        .ninja-btn { background: var(--chakra-color); border: none; color: black; font-size: 2rem; cursor: pointer; padding: 20px; }
-        .spin-right { 
-    animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1); /* Pakai efek ngebut-rem */
-}
-/* Animasi Putar 3x (Lebih Cepat & Agresif) */
-@keyframes spin { 
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(1080deg); } /* 360 x 3 = 1080 derajat */
+        /* --- LOGIN MODAL --- */
+        #login-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        .scan-line { width: 100%; height: 2px; background: cyan; position: absolute; top: 0; animation: scan 2s infinite; display: none; }
+        @keyframes scan { 0% {top:0;} 100% {top:100%;} }
+        .login-input { width: 80%; background: #111; border: 1px solid cyan; color: white; padding: 10px; margin: 10px 0; text-align: center; }
+
+        /* --- AUTH ICONS --- */
+        #auth-icon { font-size: 3rem; color: var(--chakra-color); cursor: pointer; transition: 0.5s; }
+        
+        /* MANGEKYOU SHARINGAN ANIMATION */
+        .sharingan-mode {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Mangekyou_Sharingan_Sasuke.svg/1200px-Mangekyou_Sharingan_Sasuke.svg.png');
+            background-size: cover;
+            width: 60px; height: 60px;
+            display: inline-block;
+            border-radius: 50%;
+            animation: spin 4s infinite linear;
+            box-shadow: 0 0 20px red;
+        }
+
+        /* --- KONOHA / GOD MODE STYLES (THE TRANSFORMATION) --- */
+        body.is-admin {
+            --chakra-color: #00ffea; /* Warna teks jadi Cyan Terang */
+        }
+
+        /* 1. UBAH BENTUK GRID JADI MATA (OVAL) */
+        body.is-admin .grid-item {
+            border-radius: 50% / 30%; /* Bentuk Lonjong Horizontal */
+            border: none; /* Border asli hilang, diganti animasi */
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: inset 0 0 20px rgba(0,0,0,1);
+        }
+        
+        /* Center Panel jadi lebih bulat tapi tetap dominan */
+        body.is-admin .center-panel {
+            border-radius: 50%; 
+            border: 2px solid white;
+        }
+
+        /* 2. EFEK BORDER BERGERAK WARNA-WARNI (RGB) */
+        body.is-admin .grid-item::before, body.is-admin .center-panel::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, transparent, transparent, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            animation: rotate-border 4s linear infinite;
+            z-index: -2;
+        }
+        
+        /* Lapisan dalam agar konten tidak tertutup border */
+        body.is-admin .grid-item::after, body.is-admin .center-panel::after {
+            content: ''; position: absolute; inset: 3px; 
+            background: black; border-radius: inherit; z-index: -1;
+        }
+
+        @keyframes rotate-border { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* 3. TEXT & UI CHANGES */
+        body.is-admin .sys-label { color: #fff; text-shadow: 0 0 5px white; font-weight: bold; }
+        body.is-admin .ninja-btn { color: white; filter: drop-shadow(0 0 5px cyan); }
+        
+        /* TAMPILKAN KONTROL ADMIN */
+        body.is-admin .admin-controls, body.is-admin .gallery-del { display: flex !important; display: block !important; }
+        
+        /* --- ANIMASI TOMBOL BERPUTAR --- */
+.spin-action {
+    /* Durasi 1 detik, efek ngebut di awal lalu ngerem */
+    animation: putar-kanan 1s cubic-bezier(0.4, 0, 0.2, 1); 
+    
+    /* PENTING: Icon (<i>) harus inline-block biar bisa diputar */
+    display: inline-block !important; 
 }
 
-/* Update class spin-right biar durasinya pas untuk 3 putaran */
-.social-vertical { display: flex; flex-direction: column; gap: 15px; }
-        .social-link { color: white; font-size: 1.5rem; transition: 0.3s; }
-        .social-link:hover { color: red; transform: scale(1.2); }
-        
-        /* MODAL PASS */
-        #pass-modal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; display:none; justify-content:center; align-items:center; }
-        .modal-box { border: 1px solid red; padding: 20px; background: black; text-align: center; }
-        .grid-item { animation: borderPulse 4s infinite alternate; }
-        @keyframes borderPulse {
-            0% { box-shadow: inset 0 0 5px rgba(255,0,0,0.1); }
-            100% { box-shadow: inset 0 0 15px rgba(255,0,0,0.3); }
-        }
+@keyframes putar-kanan {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(1080deg); } /* 1080 derajat = 3x putaran penuh */
+}
     </style>
 </head>
 <body>
@@ -112,205 +187,287 @@
         <source src="https://assets.mixkit.co/videos/preview/mixkit-red-fog-in-a-dark-forest-4248-large.mp4" type="video/mp4">
     </video>
 
-    <div id="pass-modal">
-        <div class="modal-box">
-            <h3>🔒 AKSES TERKUNCI</h3>
-            <input type="password" id="secret-code" placeholder="***" style="background:#111; border:1px solid red; color:white; padding:5px; text-align:center;">
-            <br><br>
-            <button onclick="checkPass()" style="background:red; border:none; padding:5px 15px; font-weight:bold;">BUKA</button>
-            <button onclick="document.getElementById('pass-modal').style.display='none'" style="background:none; border:1px solid #333; color:#aaa; padding:5px 15px;">BATAL</button>
+    <div id="login-modal">
+        <div class="scan-line" id="scan-line"></div>
+        <div style="background:black; border:1px solid cyan; padding:20px; text-align:center; box-shadow:0 0 30px cyan;">
+            <h3 style="color:cyan; margin:0 0 10px 0;">SYSTEM OVERRIDE</h3>
+            <div id="manual-login" style="display:none;">
+                <input type="password" id="admin-pass" class="login-input" placeholder="PASSCODE">
+                <button onclick="authPassword()" style="background:cyan; color:black; border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">ACCESS</button>
+            </div>
+            <div id="bio-login">
+                <i class="fas fa-fingerprint" style="font-size:4rem; color:red; animation:pulse 1s infinite;" onclick="triggerBio()"></i>
+                <p style="color:white; font-size:0.7rem; margin-top:10px;">SCAN BIOMETRIC</p>
+            </div>
+            <button onclick="closeLogin()" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">CANCEL</button>
         </div>
     </div>
 
-    <div class="grid-container">
+    <div class="grid-container" id="main-grid">
         
         <div class="grid-item"><button class="ninja-btn" onclick="execIndodax(this)"><i class="fas fa-robot"></i></button></div>
+        
         <div class="grid-item" id="sys-01"><span class="sys-label">SYS.01</span><small>// STANDBY</small></div>
+        
         <div class="grid-item"><button class="ninja-btn" onclick="execSosmed(this)"><i class="fas fa-database"></i></button></div>
 
-        <div class="grid-item" id="sys-04"><span class="sys-label">SYS.04</span><small>// NO MEDIA</small></div>
+        <div class="grid-item" id="sys-04"><span class="sys-label">SYS.04</span><small>// NO SIGNAL</small></div>
         
         <div class="grid-item center-panel" id="center-panel" onclick="expandHub()">
             <h2 id="main-title" style="margin:0; text-shadow: 0 0 10px red;">UCHIHA EZRA</h2>
+            <div id="website-age">Calculating Time...</div>
             <p id="main-status" style="font-size: 0.7rem; color: #aaa;">// SYSTEM V.7</p>
             
             <div id="circle-content" onclick="event.stopPropagation()">
                 <div style="text-align:center;">
-                    <h3 style="margin:0; color:gold;">UCHIHA EZRA</h3>
-                    <p style="font-size:0.7rem;">FULL STACK SHINOBI</p>
-                    <p style="font-size:0.7rem; color:#0f0;">STATUS: ONLINE</p>
+                    <h3 style="margin:0; color:gold;" class="atn">UCHIHA EZRA</h3>
+                    <p id="role-text" style="font-size:0.7rem;">FULL STACK SHINOBI</p>
                 </div>
 
-                <div class="section-title">💬 LIVE CHAT</div>
-                <div id="chat-display" class="chat-box">Loading...</div>
-                <div class="input-group">
-                    <input type="text" id="chat-msg" placeholder="Pesan...">
-                    <button onclick="sendChat()">KIRIM</button>
+                <div class="section-title">💬 ENCRYPTED CHAT</div>
+                <div id="chat-display" class="chat-box">Connecting...</div>
+                <div style="display:flex; gap:5px; margin-top:5px;">
+                    <input type="text" id="chat-msg" placeholder="Message..." style="flex:1; background:#111; color:white; border:1px solid #333; padding:5px;">
+                    <button onclick="sendChat()" style="background:red; border:none; font-weight:bold;">SEND</button>
                 </div>
 
-                <div class="section-title">🗂️ MOMENT VAULT</div>
-                <div class="input-group" style="margin-bottom:10px;">
-                    <input type="file" id="gh-file">
-                    <button onclick="uploadGithub()">UPLOAD</button>
+                <div class="section-title">📸 MOMENT VAULT</div>
+                <div style="display:flex; gap:5px; margin-bottom:10px;">
+                    <input type="text" id="gh-filename" placeholder="Title" style="width:30%; background:#111; color:white; border:1px solid #333;">
+                    <input type="file" id="gh-file" style="width:70%;">
                 </div>
-                <div id="gallery-display" class="gallery-grid">Loading GitHub...</div>
+                <button onclick="uploadGithub()" style="width:100%; background:#222; color:white; border:1px solid #444; padding:5px; cursor:pointer;">UPLOAD DATA</button>
+                <div id="gallery-display" class="gallery-grid">Loading...</div>
             </div>
 
-            <button class="close-circle" onclick="closeHub(event)">TUTUP</button>
+            <button class="close-circle" onclick="closeHub(event)">EXIT HUB</button>
         </div>
 
         <div class="grid-item" id="sys-06"><span class="sys-label">SYS.06</span><small>// ENCRYPTED</small></div>
 
-        <div class="grid-item"><button class="ninja-btn" onclick="execMusic(this)"><i class="fas fa-music"></i></button></div>
+        <div class="grid-item"><button class="ninja-btn" onclick="execMusic(this)"><i class="fas fa-video"></i></button></div>
+        
         <div class="grid-item" id="sys-08"><span class="sys-label">SYS.08</span><small>// LOCKED</small></div>
-        <div class="grid-item"><button class="ninja-btn" onclick="openPass(this)"><i class="fas fa-eye"></i></button></div>
+        
+        <div class="grid-item">
+            <span class="sys-label">AUTH</span>
+            <div id="auth-container" onclick="openLogin()">
+                <i class="fas fa-fingerprint" id="auth-icon"></i>
+            </div>
+        </div>
 
     </div>
 
     <script>
-        // --- KONFIGURASI (WAJIB ISI!) ---
         const CONFIG = {
-            WORKER: "https://uchiha-backend.ezra.workers.dev", // Ganti dengan URL Worker kamu
-            GH_TOKEN: "ISI_TOKEN_GITHUB_DISINI", // Token GitHub (repo scope)
+            WORKER: "https://uchiha-backend.ezra.workers.dev",
+            GH_TOKEN: "ISI_TOKEN_GITHUB_DISINI",
             GH_USER: "uchihaezra",
             GH_REPO: "uchihaezra",
-            PASS: "konoha" // Password Rahasia
+            ADMIN_PASS: "konoha",
+            ADMIN_COOKIE: "isEzraLoggedIn"
         };
 
-        const SOSMED = { wa: "https://wa.me/628123456789", ig: "https://instagram.com/uchihaezra", dana: "https://dana.id" };
+        const SOSMED = { wa: "https://wa.me/628123456789", ig: "https://instagram.com/uchihaezra", alkitab: "https://alkitab.me", dana: "https://dana.id" };
+        let isAdmin = false;
 
-        // --- 1. VISITOR TRACKER (AUTO) ---
-        fetch(`${CONFIG.WORKER}/api/visitor`, { 
-            method: "POST", 
-            body: JSON.stringify({ referrer: document.referrer }),
-            headers: { "Content-Type": "application/json" }
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLogin();
+            trackVisitor();
+            initWebsiteAge();
         });
 
-        // --- 2. CHAT SYSTEM ---
+        // --- AUTH & KONOHA TRANSFORMATION ---
+        function openLogin() { if(!isAdmin) document.getElementById('login-modal').style.display = 'flex'; }
+        function closeLogin() { document.getElementById('login-modal').style.display = 'none'; }
+
+        async function triggerBio() {
+            // Simulasi WebAuthn (Force Popup Asli)
+            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+                alert("HTTPS REQUIRED FOR BIO-SCAN.");
+                document.getElementById('bio-login').style.display = 'none';
+                document.getElementById('manual-login').style.display = 'block';
+                return;
+            }
+            if(window.PublicKeyCredential) {
+                try {
+                    const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
+                    await navigator.credentials.create({ publicKey: {
+                        challenge: challenge, rp: { name: "UCHIHA SYSTEM" },
+                        user: { id: Uint8Array.from("ADMIN", c=>c.charCodeAt(0)), name: "admin", displayName: "Admin" },
+                        pubKeyCredParams: [{alg:-7, type:"public-key"}], authenticatorSelection: { authenticatorAttachment: "platform" }
+                    }});
+                    loginSuccess();
+                } catch(e) { 
+                    document.getElementById('bio-login').style.display='none'; 
+                    document.getElementById('manual-login').style.display='block'; 
+                }
+            } else { document.getElementById('bio-login').style.display='none'; document.getElementById('manual-login').style.display='block'; }
+        }
+
+        function authPassword() {
+            if(document.getElementById('admin-pass').value === CONFIG.ADMIN_PASS) loginSuccess();
+            else alert("ACCESS DENIED");
+        }
+
+        function loginSuccess() {
+            isAdmin = true;
+            document.cookie = `${CONFIG.ADMIN_COOKIE}=true; path=/; max-age=3600`;
+            
+            // 1. AKTIFKAN FULLSCREEN
+            if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+
+            // 2. TERAPKAN KELAS DEWA (Animasi RGB Border & Bentuk Oval)
+            document.body.classList.add('is-admin');
+
+            // 3. UBAH ICON SIDIK JARI JADI MANGEKYOU SHARINGAN
+            const authContainer = document.getElementById('auth-container');
+            authContainer.innerHTML = '<div class="sharingan-mode"></div>'; // Ganti HTML jadi div animasi
+            
+            // 4. UBAH TEKS & TAMPILAN
+            document.getElementById('main-title').innerText = "GOD MODE";
+            document.getElementById('main-title').style.color = "cyan";
+            document.getElementById('main-title').style.textShadow = "0 0 20px cyan";
+            document.getElementById('main-status').innerText = "// ETERNAL ACCESS GRANTED";
+            document.getElementById('role-text').innerText = "REALITY MANIPULATOR";
+            
+            // 5. UBAH LABEL GRID
+            document.getElementById('sys-01').querySelector('.sys-label').innerText = "DIVINE.01";
+            document.getElementById('sys-04').querySelector('.sys-label').innerText = "OMNI.VIEW";
+            document.getElementById('sys-06').querySelector('.sys-label').innerText = "SOCIAL.LINK";
+            document.getElementById('sys-08').querySelector('.sys-label').innerText = "LIFE.LOG";
+
+            closeLogin();
+            loadVisitorLog(); loadChat(); loadGallery();
+            document.getElementById('website-age').style.display = 'block';
+        }
+
+        function checkLogin() { if(document.cookie.includes(`${CONFIG.ADMIN_COOKIE}=true`)) loginSuccess(); }
+
+        // --- WEBSITE AGE ---
+        function initWebsiteAge() {
+            const startDate = new Date(2006, 7, 7); // TANGGAL LAHIR WEB
+            const el = document.getElementById('website-age');
+            setInterval(() => {
+                const now = new Date();
+                const diff = now - startDate;
+                const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+                const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
+                const hours = now.getHours();
+                const mins = now.getMinutes();
+                const secs = now.getSeconds();
+                el.innerHTML = `<i class="fas fa-hourglass-half"></i> AGE: ${years}Y ${days}D | ${hours}:${mins}:${secs}`;
+            }, 1000);
+        }
+
+        // --- FEATURES ---
+        function execSosmed(btn) {
+            animate(btn, "LINKING...");
+            document.getElementById('sys-06').innerHTML = `
+            <span class="sys-label">SOCIAL.LINK</span>
+            <div class="social-vertical">
+                <a href="${SOSMED.wa}" class="social-btn" target="_blank"><i class="fab fa-whatsapp"></i> <span>WHATSAPP</span></a>
+                <a href="${SOSMED.ig}" class="social-btn" target="_blank"><i class="fab fa-instagram"></i> <span>INSTAGRAM</span></a>
+                <a href="${SOSMED.alkitab}" class="social-btn" target="_blank"><i class="fas fa-book-bible"></i> <span>ALKITAB</span></a>
+                <a href="${SOSMED.dana}" class="social-btn" target="_blank"><i class="fas fa-wallet"></i> <span>DANA</span></a>
+            </div>`;
+        }
+
+        function execMusic(btn) {
+            animate(btn, "VISUAL...");
+            document.getElementById('sys-04').innerHTML = `
+            <span class="sys-label">OMNI.VIEW</span>
+            <div style="width:100%; height:100%; display:flex; justify-content:center; align-items:center;">
+                <video style="width:100%; height:100%; object-fit:cover; border-radius:10px;" autoplay loop muted playsinline>
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-city-at-night-aerial-view-4509-large.mp4">
+                </video>
+            </div>`;
+        }
+
+        // --- STANDARD FUNCTIONS (CHAT, GITHUB, INDODAX) ---
+        // (Sama seperti sebelumnya, disederhanakan untuk ringkas)
         async function loadChat() {
-            const display = document.getElementById('chat-display');
             try {
-                const res = await fetch(`${CONFIG.WORKER}/api/chat`);
-                const data = await res.json();
-                display.innerHTML = data.map(m => `
-                    <div class="chat-msg">
-                        <div>
-                            <span class="chat-meta">[${m.ip}] ${m.date.split(' ')[1]}</span><br>
-                            ${m.text}
-                        </div>
-                        <div class="del-btn" onclick="delChat('${m.id}')">X</div>
-                    </div>`).join('');
-            } catch { display.innerHTML = "Error load chat"; }
+                const r = await fetch(`${CONFIG.WORKER}/api/chat`); const d = await r.json();
+                document.getElementById('chat-display').innerHTML = d.map(m => `
+                <div class="chat-msg"><div><small style="color:gray">[${m.date}]</small><br>${m.text}</div>
+                ${isAdmin ? `<div class="admin-controls" style="color:red; cursor:pointer;" onclick="deleteChat('${m.id}')">X</div>` : ''}</div>`).join('');
+            } catch { document.getElementById('chat-display').innerHTML = "Offline"; }
         }
-
         async function sendChat() {
-            const input = document.getElementById('chat-msg');
-            if(!input.value) return;
-            await fetch(`${CONFIG.WORKER}/api/chat`, { method: "POST", body: JSON.stringify({ text: input.value }) });
-            input.value = ""; loadChat();
+            const txt = document.getElementById('chat-msg').value; if(!txt) return;
+            await fetch(`${CONFIG.WORKER}/api/chat`, { method: "POST", body: JSON.stringify({ text: txt }) });
+            document.getElementById('chat-msg').value=""; loadChat();
         }
-
-        async function delChat(id) {
-            if(confirm("Hapus pesan?")) {
-                await fetch(`${CONFIG.WORKER}/api/chat`, { method: "DELETE", body: JSON.stringify({ id }) });
-                loadChat();
-            }
+        async function deleteChat(id) {
+            if(confirm("Delete?")) { await fetch(`${CONFIG.WORKER}/api/chat`, { method:"DELETE", body:JSON.stringify({id, pass:CONFIG.ADMIN_PASS})}); loadChat(); }
         }
-
-        // --- 3. GITHUB VAULT (UPLOAD & DELETE) ---
         async function loadGallery() {
-            const display = document.getElementById('gallery-display');
-            const url = `https://api.github.com/repos/${CONFIG.GH_USER}/${CONFIG.GH_REPO}/contents/vault`;
             try {
-                const res = await fetch(url, { headers: { Authorization: `token ${CONFIG.GH_TOKEN}` } });
-                const files = await res.json();
-                if(Array.isArray(files)) {
-                    display.innerHTML = files.map(f => {
-                        let content = f.name.match(/\.(mp4|webm)$/i) ? 
-                            `<video src="${f.download_url}" controls></video>` : 
-                            `<img src="${f.download_url}">`;
-                        return `<div class="gallery-item">${content}<div class="gallery-del" onclick="delGithub('${f.sha}', '${f.path}')">HAPUS</div></div>`;
-                    }).join('');
-                } else { display.innerHTML = "Folder kosong"; }
-            } catch { display.innerHTML = "Gagal koneksi GitHub"; }
+                const r = await fetch(`https://api.github.com/repos/${CONFIG.GH_USER}/${CONFIG.GH_REPO}/contents/vault`, {headers:{Authorization:`token ${CONFIG.GH_TOKEN}`}});
+                const f = await r.json();
+                document.getElementById('gallery-display').innerHTML = Array.isArray(f) ? f.map(i => {
+                    const media = i.name.match(/\.(mp4|mov)$/i) ? `<video src="${i.download_url}" controls></video>` : `<img src="${i.download_url}">`;
+                    return `<div class="gallery-item">${media}${isAdmin ? `<div class="gallery-del" onclick="delGithub('${i.sha}', '${i.path}')">DEL</div>` : ''}</div>`
+                }).join('') : 'Empty';
+            } catch { document.getElementById('gallery-display').innerHTML = "Error"; }
         }
-
         async function uploadGithub() {
-            const input = document.getElementById('gh-file');
-            if(!input.files.length) return alert("Pilih file!");
-            const file = input.files[0];
+            const f = document.getElementById('gh-file').files[0];
             const reader = new FileReader();
-            reader.onload = async function() {
-                const content = reader.result.split(',')[1];
-                const path = `vault/${Date.now()}_${file.name}`;
-                await fetch(`https://api.github.com/repos/${CONFIG.GH_USER}/${CONFIG.GH_REPO}/contents/${path}`, {
-                    method: "PUT",
-                    headers: { Authorization: `token ${CONFIG.GH_TOKEN}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: "Upload Vault", content: content })
-                });
-                alert("Upload Sukses!"); loadGallery();
+            reader.onload = async () => {
+                await fetch(`https://api.github.com/repos/${CONFIG.GH_USER}/${CONFIG.GH_REPO}/contents/vault/${Date.now()}_${f.name}`, {
+                    method:"PUT", headers:{Authorization:`token ${CONFIG.GH_TOKEN}`, "Content-Type":"application/json"},
+                    body: JSON.stringify({message:"Upload", content:reader.result.split(',')[1]})
+                }); loadGallery();
             };
-            reader.readAsDataURL(file);
+            if(f) reader.readAsDataURL(f);
         }
-
         async function delGithub(sha, path) {
-            if(confirm("Hapus file ini permanen?")) {
+            if(confirm("Delete File?")) {
                 await fetch(`https://api.github.com/repos/${CONFIG.GH_USER}/${CONFIG.GH_REPO}/contents/${path}`, {
-                    method: "DELETE",
-                    headers: { Authorization: `token ${CONFIG.GH_TOKEN}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: "Delete Vault", sha: sha })
-                });
-                loadGallery();
+                    method:"DELETE", headers:{Authorization:`token ${CONFIG.GH_TOKEN}`, "Content-Type":"application/json"},
+                    body: JSON.stringify({message:"Del", sha})
+                }); loadGallery();
             }
         }
-
-        // --- 4. INDODAX BOT ---
+        async function loadVisitorLog() {
+            if(!isAdmin) return;
+            const r = await fetch(`${CONFIG.WORKER}/api/visitor?mode=history`); const d = await r.json();
+            document.getElementById('sys-08').innerHTML = `<span class="sys-label">LIFE.LOG</span><div style="text-align:left; overflow:auto; height:100%; font-size:0.6rem;">TOTAL: ${d.count}<br>${d.logs.map(l=>`> ${l.time} | ${l.ip}`).join('<br>')}</div>`;
+        }
+        async function trackVisitor() { fetch(`${CONFIG.WORKER}/api/visitor`, {method:"POST", body:JSON.stringify({referrer:document.referrer})}); }
         async function execIndodax(btn) {
-            animate(btn, "FETCH IDR");
-            const p = document.getElementById('sys-01');
-            p.innerHTML = `<span class="sys-label">SYS.01</span><span style="color:yellow">AUTH...</span>`;
-            try {
-                const res = await fetch(`${CONFIG.WORKER}/api/indodax`);
-                const d = await res.json();
-                if(d.success === 1) {
-                    p.innerHTML = `<span class="sys-label">SYS.01</span><div style="text-align:left; font-size:0.7rem;">
-                    <strong style="color:gold">SALDO AKUN</strong><br>
-                    IDR: ${parseInt(d.return.balance.idr).toLocaleString()}<br>
-                    BTC: ${d.return.balance.btc}</div>`;
-                } else { throw new Error(); }
-            } catch { p.innerHTML = `<span class="sys-label">SYS.01</span><span style="color:red">API FAIL</span>`; }
+            animate(btn, "MARKET...");
+            const r = await fetch(`${CONFIG.WORKER}/api/indodax`); const d = await r.json();
+            document.getElementById('sys-01').innerHTML = `<span class="sys-label">DIVINE.01</span><div style="font-size:0.7rem; color:cyan;">IDR: ${parseInt(d.return.balance.idr).toLocaleString()}<br>BTC: ${d.return.balance.btc}</div>`;
         }
-
-        // --- 5. VISITOR LOG (SECRET) ---
-        function openPass(btn) { animate(btn, "AUTH"); document.getElementById('pass-modal').style.display='flex'; }
-        async function checkPass() {
-            if(document.getElementById('secret-code').value === CONFIG.PASS) {
-                document.getElementById('pass-modal').style.display='none';
-                const p = document.getElementById('sys-08');
-                p.innerHTML = "Loading...";
-                const res = await fetch(`${CONFIG.WORKER}/api/visitor`);
-                const d = await res.json();
-                p.innerHTML = `<span class="sys-label">SYS.08</span><div style="text-align:left; font-size:0.6rem; overflow:auto; height:100%;">
-                <div style="color:lime">TOTAL: ${d.count}</div>
-                ${d.logs.map(l => `<div>> ${l.time.split(',')[1]} | ${l.ip}</div>`).join('')}</div>`;
-            } else { alert("SALAH!"); }
-        }
-
-        // --- HELPER & ANIMASI ---
         function animate(btn, t) {
-            let i = btn.querySelector('i'); i.classList.add('spin-right');
-            document.getElementById('main-status').innerText = `// EXEC: ${t}`;
-            setTimeout(() => { i.classList.remove('spin-right'); document.getElementById('main-status').innerText = `// SYSTEM V.7`; }, 1000);
-        }
-        function expandHub() {
-            document.getElementById('center-panel').classList.add('expanded');
-            document.getElementById('circle-content').style.display = 'block';
-            document.getElementById('main-title').style.display = 'none';
-            loadChat(); loadGallery();
-        }
-        function closeHub(e) { e.stopPropagation(); document.getElementById('center-panel').classList.remove('expanded'); document.getElementById('circle-content').style.display = 'none'; document.getElementById('main-title').style.display = 'block'; }
-        function execSosmed(btn) { animate(btn, "SOSMED"); document.getElementById('sys-06').innerHTML = `<span class="sys-label">SYS.06</span><div class="social-vertical"><a href="${SOSMED.wa}" class="social-link"><i class="fab fa-whatsapp"></i></a><a href="${SOSMED.ig}" class="social-link"><i class="fab fa-instagram"></i></a><a href="${SOSMED.dana}" class="social-link"><i class="fas fa-wallet"></i></a></div>`; }
-        function execMusic(btn) { animate(btn, "MEDIA"); document.getElementById('sys-04').innerHTML = `<span class="sys-label">SYS.04</span><video style="width:90%; border:1px solid red;" autoplay loop controls><source src="https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-city-at-night-aerial-view-4509-large.mp4"></video>`; }
+    // 1. Ambil elemen icon <i> di dalam tombol yang diklik
+    let i = btn.querySelector('i');
+    
+    // 2. Reset: Hapus class animasi kalau masih nempel
+    i.classList.remove('spin-action');
+    
+    // 3. Trik Magic: Memaksa browser "baca ulang" elemen (Trigger Reflow)
+    // Tanpa baris ini, kalau diklik cepat 2x, animasi kedua gak jalan.
+    void i.offsetWidth; 
+    
+    // 4. Pasang class animasi baru
+    i.classList.add('spin-action');
+
+    // 5. Update teks status di tengah
+    document.getElementById('main-status').innerText = `// EXEC: ${t}`;
+
+    // 6. Bersihkan class setelah 1 detik (sesuai durasi animasi di CSS)
+    setTimeout(() => { 
+        i.classList.remove('spin-action'); 
+        // Balikin teks status jadi default
+        document.getElementById('main-status').innerText = `// SYSTEM V.7`; 
+    }, 1000);
+}
+        function expandHub() { document.getElementById('center-panel').classList.add('expanded'); document.getElementById('circle-content').style.display='block'; document.getElementById('main-title').style.display='none'; loadChat(); loadGallery(); }
+        function closeHub(e) { e.stopPropagation(); document.getElementById('center-panel').classList.remove('expanded'); document.getElementById('circle-content').style.display='none'; document.getElementById('main-title').style.display='block'; }
     </script>
 </body>
 </html>
